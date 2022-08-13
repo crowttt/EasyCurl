@@ -1,20 +1,26 @@
 #include <iostream>
+#include <thread>
 
 #include "utils/ConfigParse.h"
+#include "utils/EasyCurl.h"
+
+using namespace std;
 
 int main(int args, char** argv){
     Parser parser("work1.conf");
     auto works = parser.parse();
+    vector<thread> workers;
     // for(auto& data : datas){
-    //     for(auto& info : data){
-    //         cout << info.first << " | " << info.second << endl;
-    //     }
+    //     cout << data["workers"] << endl;
     // }
+
     for(auto& work : works){
-        work
-        /*
-        std::thread(curl.post(), work));
-        */
+        if(work["method"]=="POST")
+            workers.push_back(thread(&EasyCurl::post, EasyCurl(), work));
+        // else if(work["method"]=="GET")
+        //     workers.push_back(thread(&EasyCurl::get, EasyCurl(), work));
     }
+        
+    
     return 0;
 }

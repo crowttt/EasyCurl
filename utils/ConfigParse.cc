@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <map>
 #include "ConfigParse.h"
 
 using namespace std;
@@ -10,7 +11,7 @@ Parser::Parser(string filename){
     confName = filename;
 }
 
-vector<vector<pair<string, string>>> Parser::parse(){
+vector<map<string, string>> Parser::parse(){
     // bool inSection = false;
     string line, sectionValue, sectionKey;
     vector<vector<pair<string, string>>> requests;
@@ -48,9 +49,21 @@ vector<vector<pair<string, string>>> Parser::parse(){
         }
 
     }
-    return requests;
+
+    vector<map<string, string>> works;
+    for(auto& request : requests){
+        works.push_back(generateWork(request));
+    }
+    return works;
 }
 
+map<string, string> Parser::generateWork(vector<pair<string, string>> request){
+    map<string, string> work;
+    for(auto& ele : request){
+        work[ele.first] = ele.second;
+    }
+    return work;
+}
 
 // vector<ParserNode> Parser::parseTree(){
 //     fstream configFp;
