@@ -7,7 +7,7 @@
 using namespace std;
 
 int main(int args, char** argv){
-    Parser parser("work1.conf");
+    Parser parser("work_list.conf");
     auto works = parser.parse();
     vector<thread> workers;
     // for(auto& data : works){
@@ -19,10 +19,16 @@ int main(int args, char** argv){
     // }
 
     for(auto& work : works){
-        if(work["method"]=="POST")
-            workers.push_back(thread(&EasyCurl::post, EasyCurl(), work));
-        // else if(work["method"]=="GET")
-        //     workers.push_back(thread(&EasyCurl::get, EasyCurl(), work));
+        if(work["method"]=="POST"){
+            for(int i=0; i < stoi(work["workers"]); ++i){
+                workers.push_back(thread(&EasyCurl::post, EasyCurl(), work));
+            }
+        }
+        else if(work["method"]=="GET"){
+            for(int i=0; i < stoi(work["workers"]); ++i){
+                workers.push_back(thread(&EasyCurl::get, EasyCurl(), work));
+            }
+        }
     }
         
     for(auto& worker : workers)
