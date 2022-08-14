@@ -22,33 +22,18 @@ vector<map<string, string>> Parser::parse(){
         if(line == "") continue;
         else if(line.find("[work]") != string::npos){
             requests.push_back(vector<pair<string, string>>());
-            continue;
         }
-        else if(line.find("}") != string::npos){
-            sectionValue.append(line);
-            requests.back().push_back(pair<string, string>(sectionKey, sectionValue));
-            sectionValue.clear();
-            // inSection = false;
-            continue;
+        else if(line.find("-") != string::npos){
+            size_t spliter = line.find('-');
+            string value = line.erase(0, spliter + 1);
+            requests.back().back().second += value + string(",");
         }
-        else if(line.find("=") != string::npos){
-            line.erase(remove(line.begin(), line.end(), ' '), line.end());
-            size_t spliter = line.find('=');
+        else if(line.find(":") != string::npos){
+            size_t spliter = line.find(':');
             string key = line.substr(0, spliter);
             string value = line.erase(0, spliter + 1);
-
-            if(value.find("{") != string::npos){
-                sectionValue.append(value);
-                sectionKey = key;
-                // inSection = true;
-            }
-            else
-                requests.back().push_back(pair<string, string>(key, value));
+            requests.back().push_back(pair<string, string>(key, value));
         }
-        else{
-            sectionValue.append(line);
-        }
-
     }
 
     vector<map<string, string>> works;
@@ -56,11 +41,51 @@ vector<map<string, string>> Parser::parse(){
         works.push_back(generateWork(request));
     }
     return works;
+    // while(getline(configFp, line)){
+    //     line.erase(remove_if(line.begin(), line.end(), [](unsigned char x){return std::isspace(x);}), line.end());
+    //     if(line == "") continue;
+    //     else if(line.find("[work]") != string::npos){
+    //         requests.push_back(vector<pair<string, string>>());
+    //         continue;
+    //     }
+    //     else if(line.find("}") != string::npos){
+    //         sectionValue.append(line);
+    //         requests.back().push_back(pair<string, string>(sectionKey, sectionValue));
+    //         sectionValue.clear();
+    //         // inSection = false;
+    //         continue;
+    //     }
+    //     else if(line.find("=") != string::npos){
+    //         line.erase(remove(line.begin(), line.end(), ' '), line.end());
+    //         size_t spliter = line.find('=');
+    //         string key = line.substr(0, spliter);
+    //         string value = line.erase(0, spliter + 1);
+
+    //         if(value.find("{") != string::npos){
+    //             sectionValue.append(value);
+    //             sectionKey = key;
+    //             // inSection = true;
+    //         }
+    //         else
+    //             requests.back().push_back(pair<string, string>(key, value));
+    //     }
+    //     else{
+    //         sectionValue.append(line);
+    //     }
+
+    // }
 }
 
 map<string, string> Parser::generateWork(vector<pair<string, string>> request){
     map<string, string> work;
     for(auto& ele : request){
+        if(ele.first.compare("body") == 0){
+            ele.second.erase(ele.second.size()-1,1);
+            ele.second = "{" + ele.second + "}";
+        }
+        // else if(ele.first.compare("header") == 0){
+        //     ele.second.erase(0,1);
+        // }
         work[ele.first] = ele.second;
     }
     return work;

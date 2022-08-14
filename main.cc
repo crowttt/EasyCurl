@@ -19,7 +19,6 @@ int main(int args, char** argv){
     // }
 
     for(auto& work : works){
-        // cout << "1111111111111" << endl;
         if(work["method"]=="POST")
             workers.push_back(thread(&EasyCurl::post, EasyCurl(), work));
         // else if(work["method"]=="GET")
