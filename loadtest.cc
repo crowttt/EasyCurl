@@ -19,8 +19,8 @@ public:
         struct curl_slist* headers = curl_slist_append(NULL, "content-type: application/json");
         auto curl = curl_easy_init();
 
-        curl_easy_setopt(curl, CURLOPT_URL, "https://stuapply.diploma.ncku.edu.tw/apply/record");
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{\"stu_id\":\"P76104142\"}");
+        curl_easy_setopt(curl, CURLOPT_URL, "http://168.138.47.102:5000/login");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{ \"password\": \"+Jason76104142\", \"account_email\": \"ktchen@netdb.csie.ncku.edu.tw\" }");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 

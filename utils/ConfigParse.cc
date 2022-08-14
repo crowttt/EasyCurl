@@ -18,6 +18,7 @@ vector<map<string, string>> Parser::parse(){
     fstream configFp;
     configFp.open(confName, ios::in);
     while(getline(configFp, line)){
+        line.erase(remove_if(line.begin(), line.end(), [](unsigned char x){return std::isspace(x);}), line.end());
         if(line == "") continue;
         else if(line.find("[work]") != string::npos){
             requests.push_back(vector<pair<string, string>>());
